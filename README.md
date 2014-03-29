@@ -53,4 +53,24 @@ This is a tool to send automated calls to deliver messages. It consist in a HTLM
 
 
 
+##ScreenShots##
+
+*Login page*
+![alt text](http://dl.dropbox.com/u/1277237/dialer1.png)
+
+*Create Campaign*
+![alt text](http://dl.dropbox.com/u/1277237/dialer2.png)
+
+*Details*
+![alt text](http://dl.dropbox.com/u/1277237/dialer3.png)
+
+*Start Campaign*
+![alt text](http://dl.dropbox.com/u/1277237/dialer4.png)
+
+*Add Users*
+![alt text](http://dl.dropbox.com/u/1277237/dialer5.png)
+
+
+
+
 by navaismo@gmail.com
