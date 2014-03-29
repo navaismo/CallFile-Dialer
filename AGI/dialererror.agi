@@ -1,0 +1,37 @@
+#!/usr/bin/php -q
+<?php
+set_time_limit(30);
+require('phpagi/phpagi.php');
+
+
+$agi = new AGI();
+
+$host="localhost";
+$user="dialeruser";
+$pass="dialerpass";
+$db="dialerdb";
+
+$link = mysql_connect($host,$user,$pass) or die(mysql_error());
+mysql_select_db($db, $link);
+
+$id=$argv[1];
+$campname=$argv[2];
+$Tel=$argv[3];
+$Status=$argv[4];
+$try=$argv[5];
+$sipcause=$argv[6];
+
+	$sql1="SELECT Tries from " .$campname. "  WHERE NameCamp='" .$campname. "' AND ID='" .$id. "'";
+        $res=mysql_query($sql1,$link) or die(mysql_error());
+        $row = mysql_fetch_assoc($res);
+        $dbtry = $row['Tries'];
+
+        $trym = $dbtry + $try;
+
+
+	$sql="UPDATE " .$campname. " SET Tries='" .$trym. "',CallStatus='" .$Status. "', Deliver='No', SIP_CAUSE='" .$sipcause. "' WHERE NameCamp='" .$campname. "' AND ID='" .$id. "'";
+	$res=mysql_query($sql,$link)or die(mysql_error());
+	$agi->Hangup();	
+
+?>
+

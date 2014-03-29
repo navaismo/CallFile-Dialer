@@ -1,0 +1,55 @@
+#!/usr/bin/php -q
+<?php
+set_time_limit(30);
+require('phpagi/phpagi.php');
+
+$host="localhost";
+$user="dialeruser";
+$pass="dialerpass";
+$db="dialerdb";
+
+$link = mysql_connect($host,$user,$pass) or die(mysql_error());
+mysql_select_db($db, $link);
+
+
+$agi = new AGI();
+
+$id=$argv[1];
+$campname=$argv[2];
+$Tel=$argv[3];
+$try=$argv[4];
+$option=0;
+
+	$agi->answer();
+
+
+	$sql1="SELECT Tries from " .$campname. "  WHERE NameCamp='" .$campname. "' AND ID='" .$id. "'";
+	$res=mysql_query($sql1,$link) or die(mysql_error());
+	$row = mysql_fetch_assoc($res);
+        $dbtry = $row['Tries'];
+	
+	$trym = $dbtry + $try;
+
+
+	$sql="UPDATE " .$campname. " SET Tries='" .$trym. "', CallStatus='Answer', Deliver='No' WHERE NameCamp='" .$campname. "' AND ID='" .$id. "'";
+	$res=mysql_query($sql,$link)or die(mysql_error());
+
+
+	$result = $agi->get_data("/var/lib/asterisk/agi-bin/DialerCamps/" .$campname. "/sounds/dmsg", 8000, 1);
+     	$option = $result['result'];
+	if($option==1){
+		$sql1="UPDATE " .$campname. " SET Tries='" .$trym. "', CallStatus='Answer', Deliver='Yes' WHERE NameCamp='" .$campname. "' AND ID='" .$id. "'";
+		$res=mysql_query($sql1,$link)or die(mysql_error());
+		$agi->stream_file("/var/lib/asterisk/agi-bin/DialerCamps/" .$campname. "/sounds/dmsg1");
+		$agi->Hangup();
+	}else{
+		$sql2="UPDATE " .$campname. " SET Tries='" .$trym. "', CallStatus='Answer', Deliver='No' WHERE NameCamp='" .$campname. "' AND ID='" .$id. "'";
+		mysql_query($sql2,$link)or die(mysql_error());
+		$agi->Hangup();
+	}
+	
+	
+	
+
+?>
+
